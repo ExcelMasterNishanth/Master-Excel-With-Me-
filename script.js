@@ -1,387 +1,1459 @@
-/* ==========================================================
-   MASTER EXCEL WITH ME
-   script.js - Optimized Production Build
-========================================================== */
+<!DOCTYPE html>
+<html lang="en">
 
-"use strict";
+<head>
 
-document.addEventListener("DOMContentLoaded", () => {
+    <!-- =========================
+         META
+    ========================== -->
 
-    /* ==========================================================
-       DOM ELEMENTS
-    ========================================================== */
-    const body = document.body;
-    const loader = document.querySelector(".loader");
-    const progressBar = document.querySelector(".scroll-progress");
-    const navbar = document.querySelector(".navbar");
-    const hamburger = document.querySelector(".hamburger");
-    const navLinks = document.querySelector(".nav-links");
-    const themeToggle = document.getElementById("themeToggle");
-    const navItems = document.querySelectorAll(".nav-links a");
-    const topBtn = document.getElementById("topBtn");
-    const heroImage = document.querySelector(".hero-right img");
-    const floatingCards = document.querySelectorAll(".floating-card");
-    const sections = document.querySelectorAll("section[id]");
+    <meta charset="UTF-8">
 
-    /* ==========================================================
-       PAGE LOADER & ENTRANCE
-    ========================================================== */
-    window.addEventListener("load", () => {
-        if (loader) {
-            setTimeout(() => {
-                loader.classList.add("hidden");
-            }, 600);
-        }
-        body.classList.add("loaded");
-    });
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-    /* ==========================================================
-       SCROLL & NAVBAR MANAGEMENT (THROTTLED)
-    ========================================================== */
-    function updateProgressBar() {
-        if (!progressBar) return;
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const height = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = height > 0 ? (scrollTop / height) * 100 : 0;
-        progressBar.style.width = `${progress}%`;
-    }
+    <title>Master Microsoft Excel Like a Pro | Excel With Me</title>
 
-    function navbarShadow() {
-        if (!navbar) return;
-        if (window.scrollY > 50) {
-            navbar.classList.add("navbar-scrolled");
-        } else {
-            navbar.classList.remove("navbar-scrolled");
-        }
-    }
+    <meta name="description"
+        content="Premium Microsoft Excel Masterclass by Nishanth. Learn Excel from Beginner to Advanced with practical business examples.">
 
-    function activateMenu() {
-        const scrollY = window.scrollY;
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop - 150;
-            const sectionHeight = section.offsetHeight;
-            const id = section.getAttribute("id");
-            const link = document.querySelector(`.nav-links a[href="#${id}"]`);
+    <meta name="keywords"
+        content="Excel, Excel Course, Excel Masterclass, Dashboard, Pivot Table, Power Query, VBA">
 
-            if (!link) return;
+    <meta name="author"
+        content="Nishanth">
 
-            if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-                link.classList.add("active");
-            } else {
-                link.classList.remove("active");
-            }
-        });
+    <!-- Open Graph -->
 
-        if (topBtn) {
-            topBtn.style.display = window.scrollY > 500 ? "flex" : "none";
-        }
-    }
+    <meta property="og:title"
+        content="Master Microsoft Excel Like a Pro">
 
-    // Single Throttled Scroll Listener
-    let isScrolling = false;
-    window.addEventListener("scroll", () => {
-        if (!isScrolling) {
-            window.requestAnimationFrame(() => {
-                updateProgressBar();
-                navbarShadow();
-                activateMenu();
-                isScrolling = false;
-            });
-            isScrolling = true;
-        }
-    });
+    <meta property="og:description"
+        content="Premium Excel Masterclass">
 
-    /* ==========================================================
-       MOBILE MENU & NAVIGATION
-    ========================================================== */
-    if (hamburger && navLinks) {
-        hamburger.addEventListener("click", () => {
-            hamburger.classList.toggle("active");
-            navLinks.classList.toggle("active");
-        });
-    }
+    <meta property="og:type"
+        content="website">
 
-    navItems.forEach(link => {
-        link.addEventListener("click", () => {
-            hamburger?.classList.remove("active");
-            navLinks?.classList.remove("active");
-        });
-    });
+    <!-- Fonts -->
 
-    document.addEventListener("keydown", e => {
-        if (e.key === "Escape") {
-            hamburger?.classList.remove("active");
-            navLinks?.classList.remove("active");
-        }
-    });
+    <link rel="preconnect"
+        href="https://fonts.googleapis.com">
 
-    window.addEventListener("resize", () => {
-        if (window.innerWidth > 768) {
-            hamburger?.classList.remove("active");
-            navLinks?.classList.remove("active");
-        }
-    });
+    <link rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
 
-    /* ==========================================================
-       SMOOTH SCROLLING & PREVENT EMPTY LINKS
-    ========================================================== */
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener("click", function (e) {
-            const targetAttr = this.getAttribute("href");
-            if (targetAttr === "#") {
-                e.preventDefault();
-                return;
-            }
-            const target = document.querySelector(targetAttr);
-            if (target) {
-                e.preventDefault();
-                target.scrollIntoView({ behavior: "smooth" });
-            }
-        });
-    });
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
-    /* ==========================================================
-       DARK MODE
-    ========================================================== */
-    function enableDarkMode() {
-        body.classList.add("dark-mode");
-        localStorage.setItem("theme", "dark");
-        if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-    }
+    <!-- Font Awesome -->
 
-    function disableDarkMode() {
-        body.classList.remove("dark-mode");
-        localStorage.setItem("theme", "light");
-        if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-    }
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-    if (localStorage.getItem("theme") === "dark") {
-        enableDarkMode();
-    }
+    <!-- CSS -->
 
-    themeToggle?.addEventListener("click", () => {
-        body.classList.contains("dark-mode") ? disableDarkMode() : enableDarkMode();
-    });
+    <link rel="stylesheet"
+        href="style.css">
 
-    /* ==========================================================
-       REVEAL ANIMATIONS
-    ========================================================== */
-    const revealElements = document.querySelectorAll(".reveal-up, .reveal-left, .reveal-right");
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add("active");
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.15 });
+</head>
 
-    revealElements.forEach(el => revealObserver.observe(el));
+<body>
 
-    /* ==========================================================
-       COUNTER ANIMATION
-    ========================================================== */
-    const counters = document.querySelectorAll("[data-counter]");
-    const counterObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (!entry.isIntersecting) return;
+    <!-- =========================
+         LOADER
+    ========================== -->
 
-            const counter = entry.target;
-            const target = Number(counter.dataset.counter);
-            let current = 0;
-            const increment = Math.ceil(target / 80);
+    <div class="loader">
 
-            function updateCounter() {
-                current += increment;
-                if (current >= target) {
-                    counter.textContent = target;
-                } else {
-                    counter.textContent = current;
-                    requestAnimationFrame(updateCounter);
-                }
-            }
+        <div class="spinner"></div>
 
-            updateCounter();
-            observer.unobserve(counter);
-        });
-    });
+    </div>
 
-    counters.forEach(counter => counterObserver.observe(counter));
+    <!-- =========================
+         SCROLL PROGRESS
+    ========================== -->
 
-    /* ==========================================================
-       ACCORDION
-    ========================================================== */
-    const accordionHeaders = document.querySelectorAll(".accordion-header");
-    accordionHeaders.forEach(header => {
-        header.addEventListener("click", () => {
-            const item = header.parentElement;
-            const content = item.querySelector(".accordion-content");
-            const isOpened = content.style.maxHeight;
+    <div class="scroll-progress"></div>
 
-            document.querySelectorAll(".accordion-content").forEach(panel => {
-                panel.style.maxHeight = null;
-            });
+    <!-- =========================
+         HEADER
+    ========================== -->
 
-            document.querySelectorAll(".accordion-header span").forEach(icon => {
-                icon.textContent = "+";
-            });
+    <header>
 
-            if (!isOpened) {
-                content.style.maxHeight = content.scrollHeight + "px";
-                const icon = header.querySelector("span");
-                if (icon) icon.textContent = "−";
-            }
-        });
-    });
+        <nav class="navbar">
 
-    /* ==========================================================
-       BUTTON RIPPLE EFFECT
-    ========================================================== */
-    document.querySelectorAll(".btn").forEach(button => {
-        button.addEventListener("click", function (e) {
-            const circle = document.createElement("span");
-            const diameter = Math.max(this.clientWidth, this.clientHeight);
-            const radius = diameter / 2;
+            <div class="logo">
 
-            circle.style.width = circle.style.height = `${diameter}px`;
-            circle.style.left = `${e.clientX - this.getBoundingClientRect().left - radius}px`;
-            circle.style.top = `${e.clientY - this.getBoundingClientRect().top - radius}px`;
-            circle.classList.add("ripple");
+                Excel<span>WithMe</span>
 
-            const existingRipple = this.querySelector(".ripple");
-            if (existingRipple) existingRipple.remove();
+            </div>
 
-            this.appendChild(circle);
-        });
-    });
+            <ul class="nav-links">
 
-    /* ==========================================================
-       TESTIMONIAL AUTO SLIDER
-    ========================================================== */
-    const testimonials = document.querySelectorAll(".testimonial-card");
-    let currentSlide = 0;
+                <li><a href="#about">About</a></li>
 
-    function showTestimonial(index) {
-        testimonials.forEach((card, i) => {
-            if (i === index) {
-                card.style.opacity = "1";
-                card.style.transform = "scale(1)";
-                card.style.display = "block";
-            } else {
-                card.style.opacity = "0";
-                card.style.transform = "scale(0.95)";
-                card.style.display = "none";
-            }
-        });
-    }
+                <li><a href="#course">Course</a></li>
 
-    if (testimonials.length > 0) {
-        showTestimonial(currentSlide);
-        setInterval(() => {
-            currentSlide = (currentSlide + 1) % testimonials.length;
-            showTestimonial(currentSlide);
-        }, 4000);
-    }
+                <li><a href="#curriculum">Curriculum</a></li>
 
-    /* ==========================================================
-       BACK TO TOP BUTTON
-    ========================================================== */
-    topBtn?.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    });
+                <li><a href="#pricing">Pricing</a></li>
 
-    /* ==========================================================
-       HERO & FLOATING CARDS PARALLAX (COMBINED)
-    ========================================================== */
-    window.addEventListener("mousemove", e => {
-        const mouseX = (window.innerWidth / 2 - e.clientX);
-        const mouseY = (window.innerHeight / 2 - e.clientY);
+                <li><a href="#faq">FAQ</a></li>
 
-        if (heroImage) {
-            heroImage.style.transform = `translate(${mouseX / 45}px, ${mouseY / 45}px)`;
-        }
+                <li><a href="#contact">Contact</a></li>
 
-        floatingCards.forEach(card => {
-            card.style.transform = `translate(${mouseX / 70}px, ${mouseY / 70}px)`;
-        });
-    });
+            </ul>
 
-    /* ==========================================================
-       NEWSLETTER SUBSCRIPTION (GOOGLE APPS SCRIPT)
-    ========================================================== */
-    const newsletterForm = document.getElementById("newsletterForm");
+            <div class="nav-right">
 
-    if (newsletterForm) {
-        newsletterForm.addEventListener("submit", async function (e) {
-            e.preventDefault();
+                <button id="themeToggle">
 
-            const emailInput = document.getElementById("subscriberEmail");
-            const message = document.getElementById("subscribeMessage");
-            const button = newsletterForm.querySelector("button");
+                    <i class="fas fa-moon"></i>
 
-            if (!emailInput || !emailInput.value.trim()) return;
+                </button>
 
-            button.disabled = true;
-            button.textContent = "Submitting...";
+                <div class="hamburger">
 
-            const formData = new URLSearchParams();
-            formData.append("email", emailInput.value.trim());
+                    <span></span>
 
-            try {
-                await fetch(
-                    "https://script.google.com/macros/s/AKfycbyOksXKmYNaSyE-m6RSM17Hjl1OMAQOnYGXrO4IniTA15o52egAwADQeetFPKXxKTGm/exec",
-                    {
-                        method: "POST",
-                        body: formData,
-                        mode: "no-cors"
-                    }
-                );
+                    <span></span>
 
-                if (message) {
-                    message.textContent = "✓ Thanks for subscribing!";
-                    message.style.marginTop = "15px";
-                }
-                newsletterForm.reset();
-            } catch (error) {
-                if (message) {
-                    message.textContent = "Something went wrong. Please try again.";
-                }
-                console.error("Subscription Error:", error);
-            } finally {
-                button.disabled = false;
-                button.textContent = "Subscribe";
-            }
-        });
-    }
+                    <span></span>
 
-    /* ==========================================================
-       ACCESSIBILITY ENHANCEMENTS
-    ========================================================== */
-    document.querySelectorAll("button").forEach(button => {
-        if (!button.getAttribute("aria-label")) {
-            button.setAttribute("aria-label", button.textContent.trim() || "Button");
-        }
-    });
+                </div>
 
-    document.querySelectorAll("img").forEach(img => {
-        if (!img.hasAttribute("loading")) {
-            img.setAttribute("loading", "lazy");
-        }
-    });
+            </div>
 
-    // Initial Trigger on Load
-    updateProgressBar();
-    navbarShadow();
-    activateMenu();
+        </nav>
 
-    console.log("%c🚀 Master Excel With Me - Production Ready", "color:#0078D4;font-size:16px;font-weight:bold;");
-});
-document.querySelector(".newsletter-form").addEventListener("submit", function(e) {
-    e.preventDefault();
+    </header>
 
-    const email = this.querySelector("input").value;
+    <!-- =========================
+         HERO
+    ========================== -->
 
-    alert("Thanks for subscribing! 🎉");
+    <section class="hero">
 
-    this.reset();
-});
+        <div class="hero-content">
+
+            <div class="hero-left reveal-left">
+
+                <span class="badge">
+
+                    LIVE + RECORDED SESSION
+
+                </span>
+
+                <h1>
+
+                    Master Microsoft Excel
+
+                    <span>Like a Pro</span>
+
+                </h1>
+
+                <p>
+
+                    Learn Microsoft Excel from Beginner to Advanced
+
+                    using practical finance, business and real-world
+
+                    examples.
+
+                </p>
+
+                <div class="hero-buttons">
+
+                    <a href="#pricing"
+                        class="btn btn-primary">
+
+                        Enroll Now
+
+                    </a>
+
+                    <a href="#curriculum"
+                        class="btn btn-secondary">
+
+                        View Curriculum
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="hero-right reveal-right">
+
+                <img src="assets/images/hero.png"
+                    alt="Excel Illustration">
+
+            </div>
+
+        </div>
+
+        <!-- Floating Cards -->
+
+        <div class="floating-card card1">
+
+            <h3 data-counter="500">0</h3>
+
+            <p>Students</p>
+
+        </div>
+
+        <div class="floating-card card2">
+
+            <h3>4.9 ★</h3>
+
+            <p>Course Rating</p>
+
+        </div>
+
+        <div class="floating-card card3">
+
+            <h3>Recorded</h3>
+
+            <p>Included</p>
+
+        </div>
+
+    </section>
+    <!-- ==========================================
+         ABOUT INSTRUCTOR
+    =========================================== -->
+
+    <section id="about" class="about">
+
+        <div class="container">
+
+            <div class="section-title reveal-up">
+
+                <span>ABOUT THE TRAINER</span>
+
+                <h2>Meet Your Instructor</h2>
+
+                <p>
+                    Learn Excel from a finance professional who uses Excel
+                    every day in real business scenarios.
+                </p>
+
+            </div>
+
+            <div class="about-wrapper">
+
+                <div class="about-image reveal-left">
+
+                    <img src="assets/images/profile.jpg"
+                        alt="Nishanth"
+                        loading="lazy">
+
+                </div>
+
+                <div class="about-content reveal-right">
+
+                    <h3>Nishanth</h3>
+
+                    <h4>Finance Professional | Excel Trainer</h4>
+
+                    <p>
+
+                        Hi! I'm Nishanth.
+
+                        I work as a Finance Professional and have trained
+                        students and working professionals in Microsoft Excel.
+
+                        My sessions focus on practical business examples,
+                        automation techniques, shortcuts and dashboards
+                        that help you become productive from Day One.
+
+                    </p>
+
+                    <div class="about-stats">
+
+                        <div class="stat-card">
+
+                            <h3 data-counter="500">0</h3>
+
+                            <p>Students Trained</p>
+
+                        </div>
+
+                        <div class="stat-card">
+
+                            <h3 data-counter="12">0</h3>
+
+                            <p>Core Modules</p>
+
+                        </div>
+
+                        <div class="stat-card">
+
+                            <h3 data-counter="100">0</h3>
+
+                            <p>Practice Files</p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+         COURSE HIGHLIGHTS
+    =========================================== -->
+
+    <section id="course" class="course">
+
+        <div class="container">
+
+            <div class="section-title reveal-up">
+
+                <span>COURSE HIGHLIGHTS</span>
+
+                <h2>Everything You Need to Master Excel</h2>
+
+                <p>
+
+                    Carefully designed curriculum covering beginner,
+                    intermediate and advanced Excel concepts.
+
+                </p>
+
+            </div>
+
+            <div class="course-grid">
+
+                <div class="course-card reveal-up">
+
+                    <i class="fas fa-table"></i>
+
+                    <h3>Excel Basics</h3>
+
+                    <p>
+                        Learn workbook navigation,
+                        formatting and productivity tips.
+                    </p>
+
+                </div>
+
+                <div class="course-card reveal-up">
+
+                    <img src="assets/icons/parentheses.svg"
+     alt="Functions & Formula"
+     class="course-icon">
+
+                    <h3>Functions & Formula</h3>
+
+                    <p>
+                        Master IF, XLOOKUP, INDEX MATCH,
+                        TEXT, DATE and Logical Functions.
+                    </p>
+
+                </div>
+
+                <div class="course-card reveal-up">
+
+                    <i class="fas fa-fill-drip"></i>
+
+                    <h3>Conditional Formatting</h3>
+
+                    <p>
+
+                        Highlight trends automatically
+                        using dynamic formatting rules.
+
+                    </p>
+
+                </div>
+
+                <div class="course-card reveal-up">
+
+                    <i class="fas fa-check-circle"></i>
+
+                    <h3>Data Validation</h3>
+
+                    <p>
+
+                        Create professional drop-downs,
+                        restrictions and forms.
+
+                    </p>
+
+                </div>
+
+                <div class="course-card reveal-up">
+
+                    <i class="fas fa-chart-column"></i>
+
+                    <h3>Charts</h3>
+
+                    <p>
+
+                        Build modern interactive charts
+                        for business reporting.
+
+                    </p>
+
+                </div>
+
+                <div class="course-card reveal-up">
+
+                    <i class="fas fa-table-columns"></i>
+
+                    <h3>Pivot Tables</h3>
+
+                    <p>
+
+                        Analyze thousands of rows
+                        within seconds.
+
+                    </p>
+
+                </div>
+
+                <div class="course-card reveal-up">
+
+                    <i class="fas fa-gauge-high"></i>
+
+                    <h3>Dashboards</h3>
+
+                    <p>
+
+                        Build beautiful KPI dashboards
+                        using slicers and charts.
+
+                    </p>
+
+                </div>
+
+                <div class="course-card reveal-up">
+
+                    <i class="fas fa-database"></i>
+
+                    <h3>Power Query</h3>
+
+                    <p>
+
+                        Import, clean and transform
+                        data automatically.
+
+                    </p>
+
+                </div>
+
+                <div class="course-card reveal-up">
+
+                    <i class="fas fa-layer-group"></i>
+
+                    <h3>Power Pivot</h3>
+
+                    <p>
+
+                        Learn relationships,
+                        DAX basics and data models.
+
+                    </p>
+
+                </div>
+
+                <div class="course-card reveal-up">
+
+                    <i class="fas fa-code"></i>
+
+                    <h3>VBA Introduction</h3>
+
+                    <p>
+
+                        Automate repetitive work
+                        using Excel Macros.
+
+                    </p>
+
+                </div>
+
+                <div class="course-card reveal-up">
+
+                    <i class="fas fa-keyboard"></i>
+
+                    <h3>Keyboard Shortcuts</h3>
+
+                    <p>
+
+                        Work 10x faster using
+                        professional shortcuts.
+
+                    </p>
+
+                </div>
+
+                <div class="course-card reveal-up">
+
+                    <i class="fas fa-briefcase"></i>
+
+                    <h3>Real-Time Projects</h3>
+
+                    <p>
+
+                        Practice using finance,
+                        MIS and reporting projects.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+    <!-- ==========================================
+         COURSE CURRICULUM
+    =========================================== -->
+
+    <section id="curriculum" class="curriculum">
+
+        <div class="container">
+
+            <div class="section-title reveal-up">
+
+                <span>COURSE CURRICULUM</span>
+
+                <h2>12 Powerful Learning Modules</h2>
+
+                <p>
+                    Step-by-step learning path from Beginner to Advanced.
+                </p>
+
+            </div>
+
+            <div class="accordion">
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        Module 1 - Excel Basics
+                        <span>+</span>
+                    </button>
+                    <div class="accordion-content">
+                        Workbook, Worksheet, Interface, Formatting, Navigation.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        Module 2 - Cell References
+                        <span>+</span>
+                    </button>
+                    <div class="accordion-content">
+                        Relative, Absolute & Mixed References.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        Module 3 - Essential Functions
+                        <span>+</span>
+                    </button>
+                    <div class="accordion-content">
+                        SUM, AVERAGE, COUNT, MIN, MAX, ROUND and more.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        Module 4 - Logical Functions
+                        <span>+</span>
+                    </button>
+                    <div class="accordion-content">
+                        IF, IFS, IFERROR, AND, OR.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        Module 5 - Lookup Functions
+                        <span>+</span>
+                    </button>
+                    <div class="accordion-content">
+                        XLOOKUP, VLOOKUP, INDEX MATCH.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        Module 6 - Text Functions
+                        <span>+</span>
+                    </button>
+                    <div class="accordion-content">
+                        LEFT, RIGHT, MID, TEXT, SUBSTITUTE, TRIM.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        Module 7 - Data Validation
+                        <span>+</span>
+                    </button>
+                    <div class="accordion-content">
+                        Drop-down lists, Input messages and Error Alerts.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        Module 8 - Conditional Formatting
+                        <span>+</span>
+                    </button>
+                    <div class="accordion-content">
+                        Highlight duplicates, KPI indicators and Heat Maps.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        Module 9 - Pivot Tables & Charts
+                        <span>+</span>
+                    </button>
+                    <div class="accordion-content">
+                        Data Analysis, Slicers and Interactive Reports.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        Module 10 - Dashboards
+                        <span>+</span>
+                    </button>
+                    <div class="accordion-content">
+                        Build professional interactive dashboards.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        Module 11 - Power Query & Power Pivot
+                        <span>+</span>
+                    </button>
+                    <div class="accordion-content">
+                        Import, Clean, Merge and Analyze Data.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        Module 12 - VBA & Automation
+                        <span>+</span>
+                    </button>
+                    <div class="accordion-content">
+                        Record Macros, Edit VBA and Automate Repetitive Tasks.
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+         SESSION DETAILS
+    =========================================== -->
+
+    <section class="session-details">
+
+        <div class="container">
+
+            <div class="section-title reveal-up">
+
+                <span>SESSION DETAILS</span>
+
+                <h2>Upcoming Live Batch</h2>
+
+            </div>
+
+            <div class="details-grid">
+
+                <div class="detail-card">
+                    <i class="fas fa-calendar-days"></i>
+                    <h3>Date</h3>
+                    <p>Sunday, 09 August 2026</p>
+                </div>
+
+                <div class="detail-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Morning</h3>
+                    <p>10:00 AM - 12:00 PM</p>
+                </div>
+
+                <div class="detail-card">
+                    <i class="fas fa-moon"></i>
+                    <h3>Evening</h3>
+                    <p>7:00 PM - 9:00 PM</p>
+                </div>
+
+                <div class="detail-card">
+                    <i class="fas fa-video"></i>
+                    <h3>Recorded Session</h3>
+                    <p>Available</p>
+                </div>
+
+                <div class="detail-card">
+                    <i class="fas fa-certificate"></i>
+                    <h3>Certificate</h3>
+                    <p>Yes</p>
+                </div>
+
+                <div class="detail-card">
+                    <i class="fas fa-language"></i>
+                    <h3>Language</h3>
+                    <p>English + Tamil</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+         PRICING
+    =========================================== -->
+
+    <section id="pricing" class="pricing">
+
+        <div class="container">
+
+            <div class="pricing-card reveal-up">
+
+                <span class="pricing-tag">
+
+                    LIMITED OFFER
+
+                </span>
+
+                <h2>Master Excel Complete Course</h2>
+
+                <div class="price">
+
+                    ₹249
+
+                </div>
+
+                <ul>
+
+                    <li>✔ Live Interactive Session</li>
+
+                    <li>✔ Recorded Session Included</li>
+
+                    <li>✔ Practice Files</li>
+
+                    <li>✔ Certificate</li>
+
+                    <li>✔ Lifetime Learning Material</li>
+
+                    <li>✔ WhatsApp Support</li>
+
+                </ul>
+
+                <div class="pricing-buttons">
+
+                    <a href="#contact"
+                        class="btn btn-primary">
+
+                        Register Now
+
+                    </a>
+
+                    <a href="https://wa.me/919360467964"
+                        class="btn btn-secondary"
+                        target="_blank">
+
+                        WhatsApp
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+         WHY JOIN
+    =========================================== -->
+
+    <section class="benefits">
+
+        <div class="container">
+
+            <div class="section-title">
+
+                <span>WHY JOIN</span>
+
+                <h2>Why Students Love This Course</h2>
+
+            </div>
+
+            <div class="timeline">
+
+                <div class="timeline-item">
+                    Learn with Real Business Examples
+                </div>
+
+                <div class="timeline-item">
+                    Beginner Friendly
+                </div>
+
+                <div class="timeline-item">
+                    Industry Level Dashboards
+                </div>
+
+                <div class="timeline-item">
+                    Lifetime Recording Access
+                </div>
+
+                <div class="timeline-item">
+                    Interview Preparation Tips
+                </div>
+
+                <div class="timeline-item">
+                    Hands-on Practice Files
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+    <!-- ==========================================
+         TESTIMONIALS
+    =========================================== -->
+
+    <section id="testimonials" class="testimonials">
+
+        <div class="container">
+
+            <div class="section-title reveal-up">
+
+                <span>TESTIMONIALS</span>
+
+                <h2>What Our Students Say</h2>
+
+                <p>
+                    Feedback from students who attended the Excel Masterclass.
+                </p>
+
+            </div>
+
+            <div class="testimonial-slider">
+
+                <div class="testimonial-card active">
+
+                    <div class="stars">
+                        ★★★★★
+                    </div>
+
+                    <p>
+
+                        "Excellent session. Everything was explained with
+                        real business examples. Highly recommended."
+
+                    </p>
+
+                    <div class="student">
+
+                        <img src="assets/images/student1.jpg"
+                            alt="Student 1"
+                            loading="lazy">
+
+                        <div>
+
+                            <h4>Vibi Mol</h4>
+
+                            <span>Logistics Coordinator</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="testimonial-card">
+
+                    <div class="stars">
+                        ★★★★★
+                    </div>
+
+                    <p>
+
+                        "The Pivot Table and Dashboard session alone
+                        was worth much more than the course fee."
+
+                    </p>
+
+                    <div class="student">
+
+                        <img src="assets/images/student2.jpg"
+                            alt="Student 2"
+                            loading="lazy">
+
+                        <div>
+
+                            <h4>Jeffry Raja</h4>
+
+                            <span>HR Executive</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="testimonial-card">
+
+                    <div class="stars">
+                        ★★★★★
+                    </div>
+
+                    <p>
+
+                        "I started as a beginner.
+                        Now I'm confident using Excel in my office."
+
+                    </p>
+
+                    <div class="student">
+
+                        <img src="assets/images/student3.jpg"
+                            alt="Student 3"
+                            loading="lazy">
+
+                        <div>
+
+                            <h4>Ashika Josh</h4>
+
+                            <span>Research Analyst</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="testimonial-card">
+
+                    <div class="stars">
+                        ★★★★★
+                    </div>
+
+                    <p>
+
+                        "Very interactive class.
+                        Nishanth answered every question patiently."
+
+                    </p>
+
+                    <div class="student">
+
+                        <img src="assets/images/student4.jpg"
+                            alt="Student 4"
+                            loading="lazy">
+
+                        <div>
+
+                            <h4>Nivedha</h4>
+
+                            <span>Finance Executive</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="testimonial-card">
+
+                    <div class="stars">
+                        ★★★★★
+                    </div>
+
+                    <p>
+
+                        "The recorded session helped me revise
+                        everything after the live class."
+
+                    </p>
+
+                    <div class="student">
+
+                        <img src="assets/images/student5.jpg"
+                            alt="Student 5"
+                            loading="lazy">
+
+                        <div>
+
+                            <h4>Kishore </h4>
+
+                            <span>Studen</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+         FAQ
+    =========================================== -->
+
+    <section id="faq" class="faq">
+
+        <div class="container">
+
+            <div class="section-title reveal-up">
+
+                <span>FAQ</span>
+
+                <h2>Frequently Asked Questions</h2>
+
+            </div>
+
+            <div class="accordion">
+
+                <div class="accordion-item">
+
+                    <button class="accordion-header">
+
+                        Is this course for beginners?
+
+                        <span>+</span>
+
+                    </button>
+
+                    <div class="accordion-content">
+
+                        Yes. The course starts from the basics and gradually covers advanced concepts.
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <button class="accordion-header">
+
+                        Will I receive the recording?
+
+                        <span>+</span>
+
+                    </button>
+
+                    <div class="accordion-content">
+
+                        Yes. The complete recorded session will be shared.
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <button class="accordion-header">
+
+                        Is a certificate provided?
+
+                        <span>+</span>
+
+                    </button>
+
+                    <div class="accordion-content">
+
+                        Yes. A course completion certificate will be issued.
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <button class="accordion-header">
+
+                        Will practice files be provided?
+
+                        <span>+</span>
+
+                    </button>
+
+                    <div class="accordion-content">
+
+                        Yes. All Excel files used during the session will be shared.
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <button class="accordion-header">
+
+                        What language will be used?
+
+                        <span>+</span>
+
+                    </button>
+
+                    <div class="accordion-content">
+
+                        English and Tamil.
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <button class="accordion-header">
+
+                        Which Excel version is required?
+
+                        <span>+</span>
+
+                    </button>
+
+                    <div class="accordion-content">
+
+                        Excel 2019, Excel 2021 or Microsoft 365 is recommended.
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <button class="accordion-header">
+
+                        Can I attend using my mobile?
+
+                        <span>+</span>
+
+                    </button>
+
+                    <div class="accordion-content">
+
+                        Yes, but a laptop is strongly recommended for practice.
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <button class="accordion-header">
+
+                        Will Power Query be covered?
+
+                        <span>+</span>
+
+                    </button>
+
+                    <div class="accordion-content">
+
+                        Yes, along with Power Pivot basics.
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <button class="accordion-header">
+
+                        Is VBA included?
+
+                        <span>+</span>
+
+                    </button>
+
+                    <div class="accordion-content">
+
+                        Yes. A beginner-friendly introduction to VBA is included.
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <button class="accordion-header">
+
+                        How do I register?
+
+                        <span>+</span>
+
+                    </button>
+
+                    <div class="accordion-content">
+
+                        Click the Register button or contact via WhatsApp.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+    <!-- ==========================================
+         NEWSLETTER
+    =========================================== -->
+
+    <section class="newsletter">
+
+        <div class="container">
+
+            <div class="newsletter-box">
+
+                <h2>Stay Updated</h2>
+
+                <p>
+
+                    Subscribe to receive Excel tips,
+                    free resources and updates about
+                    upcoming masterclasses.
+
+                </p>
+
+<form
+    class="newsletter-form"
+    action="YOUR_GOOGLE_FORM_RESPONSE_URL"
+    method="POST"
+    target="hidden_iframe">
+
+    <input
+        type="email"
+        name="entry.1342539371"
+        placeholder="Enter your email"
+        required>
+
+    <button
+        type="submit"
+        class="btn btn-primary">
+
+        Subscribe
+
+    </button>
+
+</form>
+
+<iframe
+    name="hidden_iframe"
+    style="display:none;">
+</iframe>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+         CONTACT
+    =========================================== -->
+
+    <section
+        id="contact"
+        class="contact">
+
+        <div class="container">
+
+            <div class="section-title">
+
+                <span>CONTACT</span>
+
+                <h2>Register Today</h2>
+
+                <p>
+
+                    Have questions?
+                    Reach out anytime.
+
+                </p>
+
+            </div>
+
+            <div class="contact-grid">
+
+                <a
+                    href="https://wa.me/919360467964"
+                    target="_blank"
+                    class="contact-card">
+
+                    <i class="fab fa-whatsapp"></i>
+
+                    <h3>WhatsApp</h3>
+
+                    <p>Chat Instantly</p>
+
+                </a>
+
+                <a
+                    href="mailto:excelmaster2k26@gmail.com"
+                    class="contact-card">
+
+                    <i class="fas fa-envelope"></i>
+
+                    <h3>Email</h3>
+
+                    <p>Send Email</p>
+
+                </a>
+
+                <a
+                    href="https://www.instagram.com/master_excel_with_me?igsh=MWxkdm5hMnhqenRycQ=="
+                    target="_blank"
+                    class="contact-card">
+
+                    <i class="fab fa-instagram"></i>
+
+                    <h3>Instagram</h3>
+
+                    <p>Follow Us</p>
+
+                </a>
+
+                <a
+                    href="https://www.linkedin.com/in/nishanthc004"
+                    target="_blank"
+                    class="contact-card">
+
+                    <i class="fab fa-linkedin"></i>
+
+                    <h3>LinkedIn</h3>
+
+                    <p>Connect</p>
+
+                </a>
+
+                <a
+                    href="https://forms.gle/YVTHZrYR8DUB6hJG7"
+                    target="_blank"
+                    class="contact-card">
+
+                    <i class="fas fa-file-signature"></i>
+
+                    <h3>Google Form</h3>
+
+                    <p>Register Here</p>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+         FOOTER
+    =========================================== -->
+
+    <footer>
+
+        <div class="container">
+
+            <div class="footer-content">
+
+                <div class="footer-logo">
+
+                    Excel<span>WithMe</span>
+
+                </div>
+
+                <p>
+
+                    Learn Microsoft Excel from
+                    Beginner to Advanced using
+                    practical business examples.
+
+                </p>
+
+                <div class="footer-social">
+
+                    <a href="#">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+
+                    <a href="#">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+
+                    <a href="#">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+
+                    <a href="#">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+
+                </div>
+
+                <p class="copyright">
+
+                    © 2026 Master Excel With Me.
+                    All Rights Reserved.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <!-- ==========================================
+         FLOATING BUTTONS
+    =========================================== -->
+
+    <a
+        href="https://wa.me/91XXXXXXXXXX"
+        target="_blank"
+        class="floating-whatsapp">
+
+        <i class="fab fa-whatsapp"></i>
+
+    </a>
+
+    <button
+        id="topBtn"
+        title="Back To Top">
+
+        <i class="fas fa-arrow-up"></i>
+
+    </button>
+
+    <!-- ==========================================
+         JAVASCRIPT
+    =========================================== -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
